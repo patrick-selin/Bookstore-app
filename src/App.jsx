@@ -1,90 +1,92 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import AddBook from "./AddBook";
+import { useState, useEffect } from 'react';
+import './App.css';
+import { AgGridReact } from 'ag-grid-react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddBook from './AddBook';
 
-import AppBar from "@mui/material/AppBar";
-import { Toolbar, Typography } from "@mui/material";
-import { AgGridReact } from "ag-grid-react";
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-material.css';
 
 const DATABASE_URL =
   "https://bookstore-app-26328-default-rtdb.europe-west1.firebasedatabase.app/books/.json";
 
 function App() {
-  // HOOKS
-  const [books, setBooks] = useState();
+  const [books, setBooks] = useState([]);
 
-  const [columnDefs] = useState([
-    { field: "eka sarake" },
-    { field: "toka sarake" },
-    { field: "kolmas sarake" },
-  ]);
+  const columnDefs = [
+    { field: 'Title', sortable: true, filter: true},
+    { field: 'Author', sortable: true, filter: true},
+    { field: 'Year', sortable: true, filter: true},
+    { field: 'ISBN', sortable: true, filter: true},
+    { field: 'Price', sortable: true, filter: true},
+    { 
+      headerName: '',
+      field: 'id',
+      width: 90,
+      cellRenderer: params => 
+      <IconButton onClick={() => deleteTodo(params.value)} size="small" color="error">
+        <DeleteIcon />
+      </IconButton> 
+    }
+  ]
 
   useEffect(() => {
     fetchDatabase();
-  }),
-    [];
-
-  // FUNCTIONS
+  }, [])
 
   const fetchDatabase = () => {
     fetch(DATABASE_URL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        // data -> books setBooks()
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-      });
-  };
+    .then(response => response.json())
+    .then(data => addKeys(data))
+    .catch(err => console.error(err))
+  }
 
-  // addBook() joka lahetetaan propseina AddBook componentille
+  // Add keys to the todo objects
+  const addKeys = (data) => {
+    const keys = Object.keys(data);
+    const valueKeys = Object.values(data).map((item, index) => 
+    Object.defineProperty(item, 'id', {value: keys[index]}));
+    setBooks(valueKeys);
+  }
+   
   const addNewBook = (newBook) => {
-    fetch(
-      "https://todolist-4f300-default-rtdb.europe-west1.firebasedatabase.app/items/.json",
-      {
-        method: "POST",
-        body: JSON.stringify(newBook),
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          fetchDatabase();
-        } else {
-          console.error("Error:", response.status, response.statusText);
-        }
-      })
-      .catch((err) => console.error(err));
-  };
+    fetch(DATABASE_URL,
+    {
+      method: 'POST',
+      body: JSON.stringify(newBook)
+    })
+    .then(response => fetchDatabase())
+    .catch(err => console.error(err))
+  }
 
-  // RENDER JSX
+  const deleteTodo = (id) => {
+    fetch(`https://bookstore-app-26328-default-rtdb.europe-west1.firebasedatabase.app/books/${id}.json`,
+    {
+      method: 'DELETE',
+    })
+    .then(response => fetchDatabase())
+    .catch(err => console.error(err))
+  }
+
   return (
     <>
-      <div>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h4">Bookstore</Typography>
-          </Toolbar>
-        </AppBar>
-
-        <AddBook addNewBook={addNewBook}></AddBook>
-        <div
-          className="ag-theme-alpine"
-          style={{
-            height: 400,
-            width: 600,
-          }}
-        >
-          <AgGridReact rowData={books} columnDefs={columnDefs}></AgGridReact>
-        </div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h5">
+            TodoList
+          </Typography>
+        </Toolbar>
+      </AppBar> 
+      <AddBook addNewBook={addNewBook} />
+      <div className="ag-theme-material" style={{ height: 400, width: 700 }}>
+        <AgGridReact 
+          rowData={books}
+          columnDefs={columnDefs}
+        />
       </div>
     </>
   );
