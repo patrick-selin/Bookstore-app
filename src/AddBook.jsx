@@ -20,7 +20,7 @@ function AddBook(props) {
 
 
     const inputChanged = (event) => {
-        setBook({ ...todo, [event.target.name]: event.target.value });
+        setBook({ ...book, [event.target.name]: event.target.value });
       };
 
 
@@ -33,9 +33,11 @@ function AddBook(props) {
     }
 
     const handleSave = () => {
-        props.addNewBook(newBook);
+        props.addNewBook(book);
         handleClose();
     }
+
+   
     
     return (
       <>
@@ -59,7 +61,7 @@ function AddBook(props) {
             value={book.title}
             onChange={inputChanged}
             margin="dense"
-            label="Description"
+            label="Title"
             fullWidth
           />
           <TextField
@@ -67,15 +69,32 @@ function AddBook(props) {
             value={book.author}
             onChange={inputChanged}
             margin="dense"
-            label="Date"
+            label="Author"
             fullWidth
           />
-          <TextField
+           <TextField
             name="year"
             value={book.year}
             onChange={inputChanged}
             margin="dense"
-            label="Priority"
+            label="Year"
+            fullWidth
+          />
+          <TextField
+            name="isbn"
+            value={book.isbn}
+            onChange={inputChanged}
+            margin="dense"
+            label="ISBN"
+            fullWidth
+          />
+         
+          <TextField
+            name="price"
+            value={book.price}
+            onChange={inputChanged}
+            margin="dense"
+            label="Price"
             fullWidth
           />
         </DialogContent>

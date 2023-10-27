@@ -46,14 +46,24 @@ function App() {
       });
   };
 
-
   // addBook() joka lahetetaan propseina AddBook componentille
   const addNewBook = (newBook) => {
-    console.log('first')
-    // tallena book to books
-    // ja lisaa se tietokantaan
-  }
-
+    fetch(
+      "https://todolist-4f300-default-rtdb.europe-west1.firebasedatabase.app/items/.json",
+      {
+        method: "POST",
+        body: JSON.stringify(newBook),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          fetchDatabase();
+        } else {
+          console.error("Error:", response.status, response.statusText);
+        }
+      })
+      .catch((err) => console.error(err));
+  };
 
   // RENDER JSX
   return (
@@ -64,7 +74,7 @@ function App() {
             <Typography variant="h4">Bookstore</Typography>
           </Toolbar>
         </AppBar>
-      
+
         <AddBook addNewBook={addNewBook}></AddBook>
         <div
           className="ag-theme-alpine"
