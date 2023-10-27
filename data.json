@@ -17,4 +17,4 @@
   }
 }
 
-Can you check if you spot why my react code doesn't work? The AgGrid is showing, but it doesn't populate the fetched data from firebase:
+Can you check if you spot why my react code doesn't work? The AgGrid is showing, but the rows are empty

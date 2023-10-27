@@ -18,21 +18,22 @@ function App() {
   const [books, setBooks] = useState([]);
 
   const columnDefs = [
-    { field: 'Title', sortable: true, filter: true},
-    { field: 'Author', sortable: true, filter: true},
-    { field: 'Year', sortable: true, filter: true},
-    { field: 'ISBN', sortable: true, filter: true},
-    { field: 'Price', sortable: true, filter: true},
-    { 
+    { headerName: 'Title', field: 'title', sortable: true, filter: true },
+    { headerName: 'Author', field: 'author', sortable: true, filter: true },
+    { headerName: 'Year', field: 'year', sortable: true, filter: true },
+    { headerName: 'ISBN', field: 'isbn', sortable: true, filter: true },
+    { headerName: 'Price', field: 'price', sortable: true, filter: true },
+    {
       headerName: '',
       field: 'id',
       width: 90,
-      cellRenderer: params => 
-      <IconButton onClick={() => deleteTodo(params.value)} size="small" color="error">
-        <DeleteIcon />
-      </IconButton> 
-    }
-  ]
+      cellRenderer: (params) => (
+        <IconButton onClick={() => deleteTodo(params.value)} size="small" color="error">
+          <DeleteIcon />
+        </IconButton>
+      ),
+    },
+  ];
 
   useEffect(() => {
     fetchDatabase();
@@ -82,7 +83,8 @@ function App() {
         </Toolbar>
       </AppBar> 
       <AddBook addNewBook={addNewBook} />
-      <div className="ag-theme-material" style={{ height: 400, width: 700 }}>
+      <div className="ag-theme-material" 
+      style={{ height: 400, width: 1200}}>
         <AgGridReact 
           rowData={books}
           columnDefs={columnDefs}
