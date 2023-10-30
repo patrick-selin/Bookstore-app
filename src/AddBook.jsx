@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -6,53 +7,47 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-
 function AddBook(props) {
-    const [open, setOpen] = useState(false);
-    const [book, setBook] = useState(
-        { 
-        title: "", 
-        author: "", 
-        year: "", 
-        isbn: "", 
-        price: "", 
-    });
+  const [open, setOpen] = useState(false);
+  const [book, setBook] = useState({
+    title: "",
+    author: "",
+    year: "",
+    isbn: "",
+    price: "",
+  });
 
+  const inputChanged = (event) => {
+    setBook({ ...book, [event.target.name]: event.target.value });
+  };
 
-    const inputChanged = (event) => {
-        setBook({ ...book, [event.target.name]: event.target.value });
-      };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    const handleOpen = () => {
-        setOpen(true);
-    }
+  const handleSave = () => {
+    props.addNewBook(book);
+    handleClose();
+  };
 
-    const handleClose = () => {
-        setOpen(false);
-    }
+  return (
+    <>
+      <Button
+        variant="outlined"
+        style={{
+          marginTop: "2rem",
+          marginBottom: "2rem",
+          width: "10rem",
+        }}
+        onClick={handleOpen}
+      >
+        ADD BOOK
+      </Button>
 
-    const handleSave = () => {
-        props.addNewBook(book);
-        handleClose();
-    }
-
-   
-    
-    return (
-      <>
-        <Button
-          variant="outlined"
-          style={{
-            marginTop: "2rem",
-            marginBottom: "2rem",
-            width: "10rem",
-          }}
-          onClick={handleOpen}
-        >
-          ADD BOOK
-        </Button>
-   
       <Dialog open={open}>
         <DialogTitle>New Book</DialogTitle>
         <DialogContent>
@@ -72,7 +67,7 @@ function AddBook(props) {
             label="Author"
             fullWidth
           />
-           <TextField
+          <TextField
             name="year"
             value={book.year}
             onChange={inputChanged}
@@ -88,7 +83,7 @@ function AddBook(props) {
             label="ISBN"
             fullWidth
           />
-         
+
           <TextField
             name="price"
             value={book.price}
@@ -107,10 +102,8 @@ function AddBook(props) {
           </Button>
         </DialogActions>
       </Dialog>
-        
-      </>
-    )
-  }
-  
-  export default AddBook
-  
+    </>
+  );
+}
+
+export default AddBook;
