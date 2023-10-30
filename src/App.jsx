@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddBook from "./AddBook";
+import { Button } from "@mui/material";
 
 const DATABASE_URL =
   "https://bookstore-app-26328-default-rtdb.europe-west1.firebasedatabase.app/books/.json";
@@ -78,6 +79,10 @@ function App() {
       .catch((err) => console.error(err));
   };
 
+  const handleClear = () => {
+    setBooks([]);
+  };
+
   return (
     <>
       <AppBar position="static">
@@ -86,6 +91,14 @@ function App() {
         </Toolbar>
       </AppBar>
       <AddBook addNewBook={addNewBook} />
+      <Button
+        variant="outlined"
+        color="error"
+        style={{ marginLeft: "10px" }}
+        onClick={handleClear}
+      >
+        Clear
+      </Button>
       <div className="ag-theme-material" style={{ height: 400, width: 1200 }}>
         <AgGridReact rowData={books} columnDefs={columnDefs} />
       </div>
