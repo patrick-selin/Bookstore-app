@@ -52,11 +52,15 @@ function App() {
   };
 
   const addKeys = (data) => {
-    const keys = Object.keys(data);
-    const valueKeys = Object.values(data).map((item, index) =>
-      Object.defineProperty(item, "id", { value: keys[index] })
-    );
-    setBooks(valueKeys);
+    if (data) {
+      const keys = Object.keys(data);
+      const valueKeys = Object.values(data).map((item, index) =>
+        Object.defineProperty(item, "id", { value: keys[index] })
+      );
+      setBooks(valueKeys);
+    } else {
+      setBooks([]);
+    }
   };
 
   const addNewBook = (newBook) => {
@@ -79,9 +83,26 @@ function App() {
       .catch((err) => console.error(err));
   };
 
-  const handleClear = () => {
+const handleClear = async () => {
+  try {
+    const deletePromises = books.map(async (book) => {
+      await fetch(
+        `https://bookstore-app-26328-default-rtdb.europe-west1.firebasedatabase.app/books/${book.id}.json`,
+        {
+          method: "DELETE",
+        }
+      );
+    });
+
+    // Wait for all delete promises to complete
+    await Promise.all(deletePromises);
+
+    // Clear the books in the state
     setBooks([]);
-  };
+  } catch (error) {
+    console.error("Error deleting books:", error);
+  }
+};
 
   return (
     <>
