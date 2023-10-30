@@ -62,6 +62,7 @@ function App() {
       setBooks([]);
     }
   };
+  
 
   const addNewBook = (newBook) => {
     fetch(DATABASE_URL, {
