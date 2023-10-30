@@ -83,26 +83,26 @@ function App() {
       .catch((err) => console.error(err));
   };
 
-const handleClear = async () => {
-  try {
-    const deletePromises = books.map(async (book) => {
-      await fetch(
-        `https://bookstore-app-26328-default-rtdb.europe-west1.firebasedatabase.app/books/${book.id}.json`,
-        {
-          method: "DELETE",
-        }
-      );
-    });
+  const handleClear = async () => {
+    try {
+      const deletePromises = books.map(async (book) => {
+        await fetch(
+          `https://bookstore-app-26328-default-rtdb.europe-west1.firebasedatabase.app/books/${book.id}.json`,
+          {
+            method: "DELETE",
+          }
+        );
+      });
 
-    // Wait for all delete promises to complete
-    await Promise.all(deletePromises);
+      // Wait for all delete promises to complete
+      await Promise.all(deletePromises);
 
-    // Clear the books in the state
-    setBooks([]);
-  } catch (error) {
-    console.error("Error deleting books:", error);
-  }
-};
+      // Clear the books in the state
+      setBooks([]);
+    } catch (error) {
+      console.error("Error deleting books:", error);
+    }
+  };
 
   return (
     <>
